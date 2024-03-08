@@ -1,4 +1,4 @@
-file(GLOB_RECURSE SOURCES  src/*.cpp src/*.c)
+file(GLOB_RECURSE SOURCES  *.cpp *.c)
 set(srcs ${SOURCES})
 
 set(includedirs
@@ -18,6 +18,7 @@ set(requires
     esp_hw_support
     esp_timer
     freertos_utils
+    arduino
 )
 
 function(maybe_add_component component_name)

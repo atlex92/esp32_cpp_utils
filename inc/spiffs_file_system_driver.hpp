@@ -1,9 +1,11 @@
 #pragma once
 
-#include "Arduino.h"
+#include <Stream.h>
+#include <initializable.h>
 #include "i_file_system_driver.hpp"
 
-class SPIFFSFileSystemDriver : public AbstractFileSystemDriver {
+
+class SPIFFSFileSystemDriver : public IFileSystemDriver, public Initializable {
 public:
     SPIFFSFileSystemDriver();
     ~SPIFFSFileSystemDriver();
@@ -15,10 +17,9 @@ public:
     bool readEntireFileToString (const std::string& file_name, std::string& output) const override;
     bool doesFileExist(const std::string& file_name) const override;
     float usagePercent() const override;
-    void initialize() override;
     bool format() const override;
 private:
+    bool initializeImpl() override;
     bool printContentToStream(const std::string& content, Stream& stream) const;
-    bool doWriteContentToFile(const std::string& content, const std::string& file_name, const bool append = false) const;
+    bool writeContentToFileImpl(const std::string& content, const std::string& file_name, const bool append = false) const;
 };
-#endif

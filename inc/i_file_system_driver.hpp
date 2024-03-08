@@ -32,9 +32,7 @@ public:
      * @return percent of free space
     */
     virtual float usagePercent() const = 0;
-    virtual bool isReady() const = 0;
     virtual bool format() const = 0;
-    virtual void initialize() = 0;
     virtual bool deleteFile(const std::string& file_path) const = 0;
     virtual std::vector<std::string> filesList(const std::string& path) const = 0;
     virtual uint32_t countFiles (const std::string& path) const = 0;
