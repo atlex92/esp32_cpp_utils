@@ -14,3 +14,7 @@ uint32_t TimeUtils::nowMs() {
         return 1000UL * (float)clock()/CLOCKS_PER_SEC;
     #endif
 }
+
+uint64_t TimeUtils::nowMicros() {
+    return ESP32Utils::micros();
+}

@@ -23,3 +23,7 @@ uint32_t ESP32Utils::millis() {
     static const uint64_t msFactor {1000ULL};
     return static_cast<uint32_t>(esp_timer_get_time()/msFactor);
 }
+
+uint64_t ESP32Utils::micros() {
+    return static_cast<uint64_t>(esp_timer_get_time());
+}

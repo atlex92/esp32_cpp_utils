@@ -8,4 +8,5 @@ namespace ESP32Utils {
     uint32_t chipID();
     esp_reset_reason_t rebootReason();
     uint32_t millis();
+    uint64_t micros();
 };

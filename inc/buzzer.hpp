@@ -1,7 +1,7 @@
 #pragma once 
 
 #include <vector>
-#include "static_binary_semaphore.hpp"
+#include "binary_semaphore.hpp"
 #include "driver/gpio.h"
 #include "sound.hpp"
 #include "task.hpp"
