@@ -49,7 +49,7 @@ void Uart::uartEventTask(void* args) {
     uart_event_t event{};
 
     auto idleDetectionTask = [&uart]() {
-        while(uart->_lastTimeDataReceived and false == TimeUtils::isPeriodPassed(uart->_lastTimeDataReceived, UART_IDLE_PERIOD_MS)) {
+        while(uart->_lastTimeDataReceived and false == TimeUtils::isPeriodPassedMs(uart->_lastTimeDataReceived, UART_IDLE_PERIOD_MS)) {
             vTaskDelay(UART_IDLE_PERIOD_MS/portTICK_PERIOD_MS);
         }
         ESP_LOGI(TAG, "idle detected!");

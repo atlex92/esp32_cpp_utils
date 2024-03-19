@@ -3,7 +3,8 @@
 #include "stdint.h"
 
 namespace TimeUtils {
-    bool isPeriodPassed(const uint32_t start, const uint32_t period);
+    bool isPeriodPassedMs(const uint32_t start, const uint32_t period);
+    bool isPeriodPassedMicros(const uint64_t start, const uint64_t period);
     uint32_t nowMs();
     uint64_t nowMicros();
 };

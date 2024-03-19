@@ -3,8 +3,12 @@
 #include <unistd.h>
 #include <time.h>
 
-bool TimeUtils::isPeriodPassed(const uint32_t start, const uint32_t period) {
+bool TimeUtils::isPeriodPassedMs(const uint32_t start, const uint32_t period) {
     return TimeUtils::nowMs() >= (start + period);
+}
+
+bool TimeUtils::isPeriodPassedMicros(const uint64_t start, const uint64_t period) {
+    return TimeUtils::nowMicros() >= (start + period);
 }
 
 uint32_t TimeUtils::nowMs() {
