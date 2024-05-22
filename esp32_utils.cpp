@@ -27,3 +27,24 @@ uint32_t ESP32Utils::millis() {
 uint64_t ESP32Utils::micros() {
     return static_cast<uint64_t>(esp_timer_get_time());
 }
+
+void ESP32Utils::delayMicros(const uint64_t micros) {
+
+    const uint64_t now{static_cast<uint64_t>(esp_timer_get_time())};
+
+    if(micros > 0) {
+        const uint64_t timestamp{now + micros};
+        if(now > timestamp){ //overflow
+            while(static_cast<uint64_t>(esp_timer_get_time()) > timestamp){
+                asm volatile ("nop");
+            }
+        }
+        while(static_cast<uint64_t>(esp_timer_get_time()) < timestamp){
+            asm volatile ("nop");
+        }
+    }
+}
+
+void ESP32Utils::delayMs(const uint64_t ms) {
+    delayMicros(ms * 1000U);
+}
