@@ -1,8 +1,14 @@
 #include "gpio_utils.hpp"
 
 esp_err_t GpioUtils::setGpioMode(const gpio_num_t gpio, const gpio_mode_t mode, const bool pullup, const bool pulldown) {
-    const uint64_t bitMask {(1UL << gpio)};
-    return setGpioModeForGroup(bitMask, mode, pullup, pulldown);
+    esp_err_t ret{gpio_set_direction(gpio, mode)};
+    if(ESP_OK == ret) {
+        ret = pullup ? gpio_pullup_en(gpio) : gpio_pullup_dis(gpio);
+    }
+    if(ESP_OK == ret) {
+        ret = pulldown ? gpio_pulldown_en(gpio) : gpio_pulldown_dis(gpio);
+    }
+    return ret;
 }
 
 esp_err_t GpioUtils::setGpioModeForGroup(const uint64_t gpio_bitmask, const gpio_mode_t mode, const bool pullup, const bool pulldown) {

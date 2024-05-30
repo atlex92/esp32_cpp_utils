@@ -16,11 +16,12 @@ GpioButton::GpioButton(const gpio_num_t gpio, const eGpioButtonPressedLogicLevel
 }
 
 bool GpioButton::initProcedure() {
+
     // if (ESP_OK != GpioUtils::resetGpio(gpio_)) {
     //     ESP_LOGE(TAG, "Failed to reset gpio %u!", gpio_);
     //     return false;
     // }
-    
+
     if (ESP_OK != GpioUtils::setGpioMode(gpio_, gpio_mode_t::GPIO_MODE_INPUT, pullup_, false)) {
         ESP_LOGE(TAG, "Failed to set INPUT mode to gpio %u!", gpio_);
         return false;
