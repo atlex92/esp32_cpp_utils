@@ -9,21 +9,48 @@ struct NtcCfg {
     float b_coeff;
     bool is_upper;
     float second_resistance;
+    float shortcut_resistance;
+    float break_resistance;
     float vcc;
 };
+
+enum eNtcStates {
+    NTC_NORMAL,
+    NTC_SHORTCUT,
+    NTC_BREAK,
+    NTC_FAULT,
+};
+
 class NtcSensor {
 
 public:
     NtcSensor(const NtcCfg& cfg)
         :   cfg_{cfg} {
     }
+    
+    void update(const float voltage) {
+        resistance_ = getResistanceInDivider(voltage);
+        if(resistance_ <= cfg_.shortcut_resistance) {
+            state_ = NTC_SHORTCUT;
+        } else if (resistance_ >= cfg_.break_resistance) {
+            state_ = NTC_BREAK;
+        } else {
+            state_ = NTC_NORMAL;
+        }
+        temperature_ = ntcResistanceToTemperatue(resistance_, cfg_.nominal_r, cfg_.b_coeff, cfg_.nominal_t);
 
-    float temperature(const float voltage) const {
-        return ntcResistanceToTemperatue(resistance(voltage), cfg_.nominal_r, cfg_.b_coeff, cfg_.nominal_t);
+    };
+
+    float temperature() const {
+        return temperature_;
     }
 
-    float resistance(const float voltage) const {
-        return getResistanceInDivider(voltage);
+    float resistance() const {
+        return resistance_;
+    }
+
+    eNtcStates state() const {
+        return state_;
     }
 
 private:
@@ -67,7 +94,10 @@ private:
         return ret;
     }
 
-    NtcCfg cfg_{};
     static constexpr float kCelciusOffset{273.15F};
     static constexpr int KInvalidTemperature{0x7FFFFFFF};
+    NtcCfg cfg_{};
+    float resistance_{};
+    float temperature_{};
+    eNtcStates state_{NTC_NORMAL};
 };

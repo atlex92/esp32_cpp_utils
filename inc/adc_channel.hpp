@@ -44,6 +44,7 @@ public:
         return ret;
     }
 
+    static constexpr int kAdcError{-1};
 private:
     bool initializeImpl() override {
         {
@@ -96,7 +97,6 @@ private:
     adc_atten_t attenuation_{};
     static adc_oneshot_unit_handle_t adc_handle_;
     adc_cali_handle_t adc_cali_[4]{};
-    static constexpr int kAdcError{-1};
     static constexpr const char* const TAG{"AdcChannel"};
     static const int kMaxVoltageDb6{1600};
     static const int kMaxVoltageDb2_5{1150};
