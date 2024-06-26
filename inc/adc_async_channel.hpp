@@ -40,6 +40,6 @@ private:
     }
     mutable Mutex mutex_{};
     AdcChannel adc_channel_;
-    MAFilter<int, window> ma_adc_filter_{};
+    MAFilter<float, window> ma_adc_filter_{};
     const uint32_t period_ms_{};
 };
