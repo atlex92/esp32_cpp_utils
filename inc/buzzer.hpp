@@ -7,7 +7,6 @@
 #include "task.hpp"
 #include "i_buzzer_driver.hpp"
 
-#pragma pack(1)
 struct Melody {
     const Sound::NoteSoundObject* sounds;
     size_t size;

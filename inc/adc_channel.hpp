@@ -35,7 +35,7 @@ public:
     static adc_atten_t getTheBestAttenuation(const int mvolts) {
         adc_atten_t ret{ADC_ATTEN_DB_0};
         if(mvolts >= kMaxVoltageDb6) {
-            ret = ADC_ATTEN_DB_11;
+            ret = ADC_ATTEN_DB_12;
         } else if(mvolts >= kMaxVoltageDb2_5) {
             ret = ADC_ATTEN_DB_6;
         } else if(mvolts > kMaxVoltageDb0) {
@@ -63,20 +63,31 @@ private:
             ADC_ATTEN_DB_0,
             ADC_ATTEN_DB_2_5,
             ADC_ATTEN_DB_6,
-            ADC_ATTEN_DB_11
+            ADC_ATTEN_DB_12
         };
 
+#if ADC_CALI_SCHEME_CURVE_FITTING_SUPPORTED
         adc_cali_curve_fitting_config_t cali_cfg{
             unit_,
             channel_,
             ADC_ATTEN_DB_0,
             bitwidth_
         };
-
         for (size_t i{}; i < 4; i++) {
             cali_cfg.atten = attenuations[i];
             ESP_ERROR_CHECK(adc_cali_create_scheme_curve_fitting(&cali_cfg, &adc_cali_[i]));
         }
+#else
+        adc_cali_line_fitting_config_t cali_cfg{
+            unit_,
+            ADC_ATTEN_DB_0,
+            bitwidth_
+        };
+        for (size_t i{}; i < 4; i++) {
+            cali_cfg.atten = attenuations[i];
+            ESP_ERROR_CHECK(adc_cali_create_scheme_line_fitting(&cali_cfg, &adc_cali_[i]));
+        }
+#endif
 
         configure();
 

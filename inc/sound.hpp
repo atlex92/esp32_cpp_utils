@@ -33,7 +33,6 @@ namespace Sound {
         OCTAVE_5
     };
 
-#pragma pack(1)
     struct NoteSoundObject{
         eBaseNotes note;
         eOctaves octave;
