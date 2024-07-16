@@ -12,13 +12,14 @@ set(requires
     # esp-tls
     nvs_flash
     # esp_http_server
-    spiffs
+    # spiffs
     driver
     spi_flash
     esp_hw_support
     esp_timer
     freertos_utils
-    arduino
+    esp_adc
+    # arduino
 )
 
 function(maybe_add_component component_name)
