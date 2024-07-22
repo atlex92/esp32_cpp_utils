@@ -7,7 +7,7 @@ namespace ESP32Utils {
     void reboot();
     uint32_t chipID();
     esp_reset_reason_t rebootReason();
-    uint32_t millis();
+    uint64_t millis();
     uint64_t micros();
     void delayMicros(const uint64_t micros);
     void delayMs(const uint64_t ms);
