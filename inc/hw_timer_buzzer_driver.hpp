@@ -3,8 +3,6 @@
 #include "i_buzzer_driver.hpp"
 #include "timer.hpp"
 
-
-
 class HwTimerBuzzerDriver : public IBuzzerDriver {
 public:
 

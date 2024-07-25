@@ -30,10 +30,16 @@ public:
 
     void start() {
         ESP_ERROR_CHECK(gptimer_start(handle_));
+        is_started_ = true;
     }
 
     void stop() {
         gptimer_stop(handle_);
+        is_started_ = false;
+    }
+
+    bool isStarted() const {
+        return is_started_;
     }
 
     uint64_t value() const {
@@ -76,4 +82,5 @@ private:
     gptimer_handle_t handle_{};
     gptimer_alarm_config_t alarm_cfg_{};
     onAlarmCallbackType on_alarm_cb_{};
+    bool is_started_{false};
 };
