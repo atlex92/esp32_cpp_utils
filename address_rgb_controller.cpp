@@ -129,9 +129,40 @@ esp_err_t rmt_new_led_strip_encoder(const led_strip_encoder_config_t* config, rm
     return ret;
 }
 
-AdrressRgbController::AdrressRgbController(const gpio_num_t gpio, const uint32_t resolution_hz)
-    :   gpio_{gpio}, resolution_{resolution_hz} {
+AdrressRgbController::AdrressRgbController(const gpio_num_t gpio, const uint32_t resolution_hz, const eColorFormats format)
+    :   gpio_{gpio}, resolution_{resolution_hz}, color_format_{format} {
 
+}
+
+esp_err_t AdrressRgbController::rmtTransmit(const uint8_t* data, const size_t len) {
+    rmt_transmit_config_t tx_config {
+        .loop_count = 0, // no transfer loop
+    };
+
+    const uint8_t* data_to_send{};
+    std::vector<uint8_t> transformed_data;
+    if(eColorFormats::COLOR_GRB == color_format_) {
+        transformed_data.resize(len);
+        for (size_t i = 0; i < len; i += 3) {
+            transformed_data[i] = data[i + 1];
+            transformed_data[i + 1] = data[i];
+            transformed_data[i + 2] = data[i + 2];
+        }
+        data_to_send = transformed_data.data();
+    } else {
+        data_to_send = data;
+    }
+    esp_err_t err{rmt_transmit(led_chan_, led_encoder_, data_to_send, len, &tx_config)};
+
+    if(ESP_OK == err) {
+        err = rmt_tx_wait_all_done(led_chan_, portMAX_DELAY);
+    }
+
+    return err;
+}
+
+bool AdrressRgbController::initializeImpl() {
+    bool ret{};
     rmt_tx_channel_config_t tx_chan_config  {
         .gpio_num = gpio_,
         .clk_src = RMT_CLK_SRC_DEFAULT, // select source clock
@@ -139,24 +170,21 @@ AdrressRgbController::AdrressRgbController(const gpio_num_t gpio, const uint32_t
         .mem_block_symbols = kDefaultMemblockSymbols, // increase the block size can make the LED less flickering
         .trans_queue_depth = kDefaultTransQueueDepth, // set the number of transactions that can be pending in the background
     };
-    ESP_ERROR_CHECK(rmt_new_tx_channel(&tx_chan_config, &led_chan_));
-
-    led_strip_encoder_config_t encoder_config {
-        .resolution = resolution_,
-    };
-    ESP_ERROR_CHECK(rmt_new_led_strip_encoder(&encoder_config, &led_encoder_));
-    ESP_ERROR_CHECK(rmt_enable(led_chan_));
-}
-
-esp_err_t AdrressRgbController::rmtTransmit(const uint8_t* data, const size_t len) {
-    rmt_transmit_config_t tx_config {
-        .loop_count = 0, // no transfer loop
-    };
-    esp_err_t err{rmt_transmit(led_chan_, led_encoder_, data, len, &tx_config)};
+    esp_err_t err{rmt_new_tx_channel(&tx_chan_config, &led_chan_)};
 
     if(ESP_OK == err) {
-        err = rmt_tx_wait_all_done(led_chan_, portMAX_DELAY);
+        led_strip_encoder_config_t encoder_config {
+            .resolution = resolution_,
+        };
+        err = rmt_new_led_strip_encoder(&encoder_config, &led_encoder_);
     }
 
-    return err;
+    if(ESP_OK == err) {
+        err = rmt_enable(led_chan_);
+        if(ESP_OK == err) {
+            ret = true;
+        }
+    }
+
+    return ret;
 }
