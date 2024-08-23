@@ -12,7 +12,7 @@ public:
     }
 
     void initHardware() override {
-        static auto onAlarmCb = [this]() {            
+        auto onAlarmCb = [this]() {            
             ESP_ERROR_CHECK(gpio_set_level(this->gpio_, this->is_gpio_high_));
             this->is_gpio_high_ = !this->is_gpio_high_;
         };
