@@ -40,9 +40,11 @@ public:
     }
 
     void write(const std::vector<uint8_t>& data) {
+        unlockStorageRegister();
         for(const auto byte : data) {
-            write(byte);
+            shiftOutData(byte);
         }
+        lockStorageRegister();
     }
 
     void enableOutput() {
