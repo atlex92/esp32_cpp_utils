@@ -2,26 +2,20 @@
 
 #include <functional>
 #include "driver/gptimer.h"
+#include "initializable.h"
 
-class Timer {
+class Timer : public Initializable {
 public:
     using onAlarmCallbackType = std::function<void()>; 
     explicit Timer(const gptimer_count_direction_t timer_direction, const uint32_t resolution) {
-        const gptimer_config_t cfg {
+
+        cfg_ = {
             GPTIMER_CLK_SRC_DEFAULT,
             timer_direction,
             resolution,
             0,
             {}
         };
-
-        const gptimer_event_callbacks_t callbacks_cfg{
-            alarmCallback
-        };
-        ESP_ERROR_CHECK(gptimer_new_timer(&cfg, &handle_));
-        ESP_ERROR_CHECK(gptimer_register_event_callbacks(handle_, &callbacks_cfg, this));
-        ESP_ERROR_CHECK(gptimer_enable(handle_));
-        setAlarmValue(resolution);
     }
 
     ~Timer() {
@@ -79,8 +73,20 @@ public:
         return true;
     }
 private:
+    bool initializeImpl() override {
+        const gptimer_event_callbacks_t callbacks_cfg{
+            alarmCallback
+        };
+        ESP_ERROR_CHECK(gptimer_new_timer(&cfg_, &handle_));
+        ESP_ERROR_CHECK(gptimer_register_event_callbacks(handle_, &callbacks_cfg, this));
+        ESP_ERROR_CHECK(gptimer_enable(handle_));
+        setAlarmValue(cfg_.resolution_hz);
+
+        return true;
+    }
     gptimer_handle_t handle_{};
     gptimer_alarm_config_t alarm_cfg_{};
     onAlarmCallbackType on_alarm_cb_{};
     bool is_started_{false};
+    gptimer_config_t cfg_{};
 };
