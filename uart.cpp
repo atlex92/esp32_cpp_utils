@@ -57,7 +57,7 @@ void Uart::uartEventTask(void* args) {
             uart->_onDataReceivedCb();
         }
     };
-    AsyncFunctor idleDetector{idleDetectionTask, "idleDetectionTask", configMINIMAL_STACK_SIZE*3};
+    AsyncFunctor idleDetector{idleDetectionTask, "idleDetectionTask", configMINIMAL_STACK_SIZE*2};
 
     while(1) {
       if(xQueueReceive(uart->_eventQueue, (void*)&event, (TickType_t)portMAX_DELAY)) {
