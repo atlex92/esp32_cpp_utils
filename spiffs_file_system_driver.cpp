@@ -64,7 +64,7 @@
 // }
 
 // vector<std::string> SPIFFSFileSystemDriver::filesList(const std::string& path) const {
-    
+
 //     std::vector<std::string> ret;
 
 //     File root{SPIFFS.open(path.c_str())};
@@ -86,7 +86,7 @@
 // }
 
 // bool SPIFFSFileSystemDriver::readEntireFileToString (const std::string& filename, std::string& output) const {
-    
+
 //     if (filename.length() > kMaxFileNameLength) {
 //         ESP_LOGE(TAG, "max filename length exceeded: %s!", filename.c_str());
 //         return false;
@@ -95,7 +95,7 @@
 //     if (!doesFileExist(filename)) {
 //         return false;
 //     }
-    
+
 //     File file{SPIFFS.open(filename.c_str(), FILE_READ)};
 
 //     if (!file) {
@@ -144,7 +144,8 @@
 //     return SPIFFS.exists(filename.c_str());
 // }
 
-// bool SPIFFSFileSystemDriver::writeContentToFileImpl(const std::string& content, const std::string& filename, const bool append) const {
+// bool SPIFFSFileSystemDriver::writeContentToFileImpl(const std::string& content, const std::string& filename, const
+// bool append) const {
 
 //     bool ret{false};
 //     const char* const mode_key{append? FILE_APPEND : FILE_WRITE};
@@ -160,14 +161,13 @@
 //     return ret;
 // }
 
-
 // bool SPIFFSFileSystemDriver::printContentToStream(const std::string& content, Stream& stream) const {
 //     const size_t printedBytes{stream.write(content.data(), content.length())};
 //     if(printedBytes != content.length()) {
 //         ESP_LOGE(TAG, "error while printing content to Stream!");
 //         return false;
 //     }
-//     return true; 
+//     return true;
 // }
 
 // bool SPIFFSFileSystemDriver::format() const {
