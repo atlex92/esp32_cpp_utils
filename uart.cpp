@@ -12,7 +12,7 @@
 
 static const char* const TAG{"uart"};
 
-Uart::Uart(const int uartNumber, const uart_config_t cfg, const size_t bufferSize)
+Uart::Uart(const uart_port_t uartNumber, const uart_config_t cfg, const size_t bufferSize)
 : _eventQueue{}, _uartNumber{uartNumber} {
   ESP_ERROR_CHECK(
       uart_driver_install(_uartNumber, bufferSize * 2, bufferSize * 2, UART_EVENT_QUEUE_LENGTH, &_eventQueue, 0));

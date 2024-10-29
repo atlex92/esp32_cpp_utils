@@ -23,7 +23,7 @@
 
 struct Uart {
   friend void IRAM_ATTR uart_intr_handle(void* arg);
-  explicit Uart(const int uartNumber, const uart_config_t cfg, const size_t bufferSize = UART_DEFAULT_BUFFER_SIZE);
+  explicit Uart(const uart_port_t uartNumber, const uart_config_t cfg, const size_t bufferSize = UART_DEFAULT_BUFFER_SIZE);
   esp_err_t remapPins(const int tx, const int rx, const int rts, const int cts);
   size_t bytesAvailable() const;
   void onDataReceived(std::function<void()> cb) {
@@ -45,7 +45,7 @@ private:
   void mutexLock();
   void mutexUnlock();
   QueueHandle_t _eventQueue;
-  const int _uartNumber;
+  const uart_port_t _uartNumber;
   std::function<void()> _onDataReceivedCb{nullptr};
   mutable Mutex _mutex;
   uint32_t _lastTimeDataReceived{};
